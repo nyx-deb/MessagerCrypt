@@ -294,6 +294,22 @@ class MenuManager:
         print()
         print()
         
+        # Configuration du serveur
+        print(f"{self.colors['cyan']}Configuration du serveur:{self.colors['reset']}")
+        print()
+        
+        server_ip = input(f"{self.colors['yellow']}Adresse IP du serveur (Entrée pour localhost): {self.colors['reset']}")
+        if not server_ip.strip():
+            server_ip = "127.0.0.1"
+        
+        server_port = input(f"{self.colors['yellow']}Port du serveur (Entrée pour 8888): {self.colors['reset']}")
+        if not server_port.strip():
+            server_port = "8888"
+        
+        print()
+        print(f"{self.colors['cyan']}Identifiants:{self.colors['reset']}")
+        print()
+        
         username = input(f"{self.colors['yellow']}Nom d'utilisateur: {self.colors['reset']}")
         print()
         password = input(f"{self.colors['yellow']}Mot de passe: {self.colors['reset']}")
@@ -304,7 +320,9 @@ class MenuManager:
         
         return {
             "username": username.strip(),
-            "password": password.strip()
+            "password": password.strip(),
+            "server_ip": server_ip.strip(),
+            "server_port": int(server_port.strip()) if server_port.strip().isdigit() else 8888
         }
     
     def show_register_form(self) -> Dict[str, str]:

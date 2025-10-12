@@ -207,8 +207,11 @@ L'application affichera :
    python src/main.py
    ```
 2. **Choisir :** "Se connecter"
-3. **Saisir l'IP du serveur :** `IP_DU_PC_SERVEUR` (ex: 192.168.1.100)
-4. **Port :** `8888`
+3. **Remplir le formulaire de connexion :**
+   - **Adresse IP du serveur :** `IP_DU_PC_SERVEUR` (ex: 192.168.1.100)
+   - **Port du serveur :** `8888` (ou Entrée pour utiliser 8888)
+   - **Nom d'utilisateur :** Votre nom d'utilisateur
+   - **Mot de passe :** Votre mot de passe
 
 #### 🔥 **Configuration du Firewall :**
 
@@ -241,8 +244,29 @@ python configure_firewall.py
 ### 🔐 Connexion
 
 1. **Sélectionner "Se connecter"** (Option 3)
-2. **Saisir les identifiants**
+2. **Remplir le formulaire de connexion :**
+   ```
+   ╔══════════════════════════════════════════════════════════════════════════════╗
+                              🔐 CONNEXION                            
+   ╚══════════════════════════════════════════════════════════════════════════════╝
+
+   Configuration du serveur:
+
+   Adresse IP du serveur (Entrée pour localhost): [IP_DU_SERVEUR]
+   Port du serveur (Entrée pour 8888): [8888]
+
+   Identifiants:
+
+   Nom d'utilisateur: [VOTRE_NOM_UTILISATEUR]
+   Mot de passe: [VOTRE_MOT_DE_PASSE]
+   ```
 3. **Accéder à l'interface de messagerie**
+
+#### 💡 **Valeurs par défaut :**
+- **IP par défaut :** `127.0.0.1` (localhost) si vous appuyez sur Entrée
+- **Port par défaut :** `8888` si vous appuyez sur Entrée
+- **Pour connexion locale :** Laissez les valeurs par défaut
+- **Pour connexion réseau :** Saisissez l'IP du PC serveur
 
 ### 💬 Interface de Messagerie
 
