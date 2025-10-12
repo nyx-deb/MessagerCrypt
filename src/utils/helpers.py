@@ -6,7 +6,6 @@ import os
 import time
 import hashlib
 import base64
-import re
 from typing import Dict, List, Optional, Any
 from datetime import datetime
 from pathlib import Path
@@ -14,14 +13,6 @@ from pathlib import Path
 
 class MessagerCryptHelpers:
     """Classe d'utilitaires pour MessagerCrypt"""
-    
-    # Cache pour les validations fréquentes
-    _validation_cache = {}
-    _cache_max_size = 1000
-    
-    # Regex compilées pour optimiser les performances
-    _username_regex = re.compile(r'^[a-zA-Z0-9_-]{3,20}$')
-    _email_regex = re.compile(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$')
     
     @staticmethod
     def generate_session_id() -> str:
@@ -150,10 +141,10 @@ class MessagerCryptHelpers:
         
         return filename
     
-    @classmethod
-    def validate_username(cls, username: str) -> bool:
+    @staticmethod
+    def validate_username(username: str) -> bool:
         """
-        Valide un nom d'utilisateur avec cache
+        Valide un nom d'utilisateur
         
         Args:
             username: Nom d'utilisateur à valider
@@ -161,19 +152,15 @@ class MessagerCryptHelpers:
         Returns:
             bool: True si valide
         """
-        # Vérification du cache
-        if username in cls._validation_cache:
-            return cls._validation_cache[username]
+        if not username or len(username) < 3:
+            return False
         
-        # Validation avec regex compilée
-        is_valid = bool(cls._username_regex.match(username))
+        if len(username) > 20:
+            return False
         
-        # Mise en cache
-        if len(cls._validation_cache) >= cls._cache_max_size:
-            cls._validation_cache.clear()
-        cls._validation_cache[username] = is_valid
-        
-        return is_valid
+        # Caractères autorisés
+        allowed_chars = set("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_-")
+        return all(c in allowed_chars for c in username)
     
     @staticmethod
     def validate_password(password: str) -> tuple:
@@ -379,10 +366,10 @@ class MessagerCryptHelpers:
             bytes_value /= 1024.0
         return f"{bytes_value:.1f} PB"
     
-    @classmethod
-    def is_valid_email(cls, email: str) -> bool:
+    @staticmethod
+    def is_valid_email(email: str) -> bool:
         """
-        Valide une adresse email avec regex compilée
+        Valide une adresse email
         
         Args:
             email: Adresse email à valider
@@ -390,7 +377,10 @@ class MessagerCryptHelpers:
         Returns:
             bool: True si valide
         """
-        return bool(cls._email_regex.match(email))
+        import re
+        
+        pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
+        return re.match(pattern, email) is not None
     
     @staticmethod
     def mask_sensitive_data(data: str, visible_chars: int = 4) -> str:

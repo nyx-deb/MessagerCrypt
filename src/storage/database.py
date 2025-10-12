@@ -23,14 +23,6 @@ class EncryptedDatabase:
         self.db_path = db_path or DATABASE_PATH
         self.db_key = db_key or DATABASE_KEY
         self.backend = default_backend()
-        
-        # Pool de connexions pour optimiser les performances
-        self._connection_pool = []
-        self._max_connections = 5
-        
-        # Requêtes préparées pour optimiser les performances
-        self._prepared_statements = {}
-        
         self._init_database()
     
     def _init_database(self):
@@ -85,44 +77,8 @@ class EncryptedDatabase:
             conn.commit()
             conn.close()
             
-            # Préparation des requêtes fréquentes
-            self._prepare_statements()
-            
         except Exception as e:
             print(f"Erreur lors de l'initialisation de la base de données: {e}")
-    
-    def _prepare_statements(self):
-        """Prépare les requêtes fréquemment utilisées"""
-        try:
-            conn = sqlite3.connect(str(self.db_path))
-            cursor = conn.cursor()
-            
-            # Requêtes préparées
-            self._prepared_statements = {
-                'get_user': cursor.execute('SELECT * FROM users WHERE username = ?'),
-                'get_messages': cursor.execute('SELECT * FROM messages WHERE sender = ? OR recipient = ? ORDER BY timestamp DESC LIMIT ?'),
-                'get_received_messages': cursor.execute('SELECT * FROM messages WHERE recipient = ? ORDER BY timestamp DESC'),
-                'search_messages': cursor.execute('SELECT * FROM messages WHERE (sender = ? OR recipient = ?) AND message LIKE ? ORDER BY timestamp DESC'),
-                'save_message': cursor.execute('INSERT INTO messages (sender, recipient, message, message_hash, timestamp, is_read) VALUES (?, ?, ?, ?, ?, ?)'),
-                'update_message_read': cursor.execute('UPDATE messages SET is_read = ? WHERE id = ?')
-            }
-            
-            conn.close()
-        except Exception as e:
-            print(f"Erreur lors de la préparation des requêtes: {e}")
-    
-    def _get_connection(self):
-        """Récupère une connexion du pool ou en crée une nouvelle"""
-        if self._connection_pool:
-            return self._connection_pool.pop()
-        return sqlite3.connect(str(self.db_path))
-    
-    def _return_connection(self, conn):
-        """Retourne une connexion au pool"""
-        if len(self._connection_pool) < self._max_connections:
-            self._connection_pool.append(conn)
-        else:
-            conn.close()
     
     def _derive_key(self, password: str, salt: bytes) -> bytes:
         """Dérive une clé à partir d'un mot de passe"""

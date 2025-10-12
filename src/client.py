@@ -17,6 +17,7 @@ from .storage.database import EncryptedDatabase
 from .storage.messages import MessageManager
 from .ui.ascii import ASCIIArt
 from .ui.menu import MenuManager
+from .ui.ascii import ASCIIArt
 
 
 class MessagerCryptClient:
@@ -32,18 +33,14 @@ class MessagerCryptClient:
         self.session_token = None
         self.user_keys = None
         
-        # Modules (lazy loading)
-        self.encryption_manager = None
-        self.auth_manager = None
-        self.key_manager = None
-        self.database = None
-        self.message_manager = None
-        self.ascii_art = None
-        self.menu_manager = None
-        
-        # Cache pour optimiser les performances
-        self._key_cache = {}
-        self._message_cache = []
+        # Modules
+        self.encryption_manager = EncryptionManager()
+        self.auth_manager = AuthManager()
+        self.key_manager = KeyManager()
+        self.database = EncryptedDatabase()
+        self.message_manager = MessageManager()
+        self.ascii_art = ASCIIArt()
+        self.menu_manager = MenuManager()
         
         # Couleurs pour l'affichage
         self.colors = {
@@ -71,36 +68,6 @@ class MessagerCryptClient:
         
         # Configuration du logging
         self._setup_logging()
-    
-    def _get_encryption_manager(self):
-        """Lazy loading du gestionnaire de chiffrement"""
-        if self.encryption_manager is None:
-            self.encryption_manager = EncryptionManager()
-        return self.encryption_manager
-    
-    def _get_auth_manager(self):
-        """Lazy loading du gestionnaire d'authentification"""
-        if self.auth_manager is None:
-            self.auth_manager = AuthManager()
-        return self.auth_manager
-    
-    def _get_key_manager(self):
-        """Lazy loading du gestionnaire de clés"""
-        if self.key_manager is None:
-            self.key_manager = KeyManager()
-        return self.key_manager
-    
-    def _get_database(self):
-        """Lazy loading de la base de données"""
-        if self.database is None:
-            self.database = EncryptedDatabase()
-        return self.database
-    
-    def _get_message_manager(self):
-        """Lazy loading du gestionnaire de messages"""
-        if self.message_manager is None:
-            self.message_manager = MessageManager()
-        return self.message_manager
     
     def _setup_logging(self):
         """Configure le système de logging"""

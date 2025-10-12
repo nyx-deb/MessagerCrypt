@@ -32,22 +32,14 @@ class MessagerCryptServer:
         self.clients = {}
         self.connected_users = {}
         
-        # Modules (lazy loading)
-        self.encryption_manager = None
-        self.auth_manager = None
-        self.key_manager = None
-        self.database = None
-        self.message_manager = None
-        self.ascii_art = None
-        self.menu_manager = None
-        
-        # Cache pour optimiser les performances
-        self._user_cache = {}
-        self._key_cache = {}
-        
-        # Pool de connexions pour optimiser les performances
-        self._connection_pool = []
-        self._max_pool_size = 10
+        # Modules
+        self.encryption_manager = EncryptionManager()
+        self.auth_manager = AuthManager()
+        self.key_manager = KeyManager()
+        self.database = EncryptedDatabase()
+        self.message_manager = MessageManager()
+        self.ascii_art = ASCIIArt()
+        self.menu_manager = MenuManager()
         
         # Configuration du logging
         self._setup_logging()
@@ -72,54 +64,6 @@ class MessagerCryptServer:
             ]
         )
         self.logger = logging.getLogger('MessagerCryptServer')
-    
-    def _get_encryption_manager(self):
-        """Lazy loading du gestionnaire de chiffrement"""
-        if self.encryption_manager is None:
-            self.encryption_manager = EncryptionManager()
-        return self.encryption_manager
-    
-    def _get_auth_manager(self):
-        """Lazy loading du gestionnaire d'authentification"""
-        if self.auth_manager is None:
-            self.auth_manager = AuthManager()
-        return self.auth_manager
-    
-    def _get_key_manager(self):
-        """Lazy loading du gestionnaire de clés"""
-        if self.key_manager is None:
-            self.key_manager = KeyManager()
-        return self.key_manager
-    
-    def _get_cached_public_key(self, username: str):
-        """Récupère une clé publique depuis le cache"""
-        if username in self._key_cache:
-            return self._key_cache[username]
-        
-        key_manager = self._get_key_manager()
-        public_key = key_manager.get_public_key(username)
-        
-        if public_key:
-            self._key_cache[username] = public_key
-        
-        return public_key
-    
-    def _clear_cache(self):
-        """Nettoie le cache pour libérer la mémoire"""
-        self._user_cache.clear()
-        self._key_cache.clear()
-    
-    def _get_database(self):
-        """Lazy loading de la base de données"""
-        if self.database is None:
-            self.database = EncryptedDatabase()
-        return self.database
-    
-    def _get_message_manager(self):
-        """Lazy loading du gestionnaire de messages"""
-        if self.message_manager is None:
-            self.message_manager = MessageManager()
-        return self.message_manager
     
     def start(self):
         """Démarre le serveur"""

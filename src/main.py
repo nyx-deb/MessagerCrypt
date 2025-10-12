@@ -11,15 +11,18 @@ from pathlib import Path
 sys.path.append(str(Path(__file__).parent.parent))
 
 from config.settings import DEBUG
+from src.ui.ascii import ASCIIArt
+from src.ui.menu import MenuManager
+from src.server import MessagerCryptServer
+from src.client import MessagerCryptClient
 
 
 class MessagerCryptApp:
     """Application principale MessagerCrypt"""
     
     def __init__(self):
-        # Lazy loading des modules
-        self.ascii_art = None
-        self.menu_manager = None
+        self.ascii_art = ASCIIArt()
+        self.menu_manager = MenuManager()
         self.server = None
         self.client = None
         
@@ -51,11 +54,6 @@ class MessagerCryptApp:
     
     def _startup_sequence(self):
         """Séquence de démarrage avec animations"""
-        # Lazy loading des modules UI
-        if self.ascii_art is None:
-            from src.ui.ascii import ASCIIArt
-            self.ascii_art = ASCIIArt()
-        
         # Effacement de l'écran
         self.ascii_art.clear_screen()
         
@@ -91,11 +89,6 @@ class MessagerCryptApp:
     
     def _main_loop(self):
         """Boucle principale de l'application"""
-        # Lazy loading du menu manager
-        if self.menu_manager is None:
-            from src.ui.menu import MenuManager
-            self.menu_manager = MenuManager()
-        
         while True:
             try:
                 # Affichage du menu principal

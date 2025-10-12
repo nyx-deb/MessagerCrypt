@@ -5,7 +5,6 @@ Interface haute niveau pour les messages chiffrés
 import json
 import base64
 import hashlib
-import gzip
 from typing import List, Dict, Optional
 from datetime import datetime
 
@@ -21,26 +20,6 @@ class MessageManager:
         self.db = EncryptedDatabase(db_path)
         self.encryption_manager = EncryptionManager()
         self.auth_manager = AuthManager()
-        
-        # Cache pour optimiser les performances
-        self._message_cache = {}
-        self._cache_size = 100
-    
-    def _compress_message(self, message: str) -> str:
-        """Compresse un message pour économiser l'espace"""
-        try:
-            compressed = gzip.compress(message.encode('utf-8'))
-            return base64.b64encode(compressed).decode('utf-8')
-        except Exception:
-            return message
-    
-    def _decompress_message(self, compressed_message: str) -> str:
-        """Décompresse un message"""
-        try:
-            compressed_data = base64.b64decode(compressed_message.encode('utf-8'))
-            return gzip.decompress(compressed_data).decode('utf-8')
-        except Exception:
-            return compressed_message
     
     def send_message(self, sender: str, recipient: str, message: str, 
                     sender_private_key: bytes, recipient_public_key: bytes) -> bool:
