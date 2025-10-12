@@ -18,7 +18,7 @@ DATABASE_PATH = DATA_DIR / "messagercrypt.db"
 DATABASE_KEY = os.environ.get("MESSAGERCRYPT_DB_KEY", "default_key_change_me")
 
 # Network settings
-DEFAULT_HOST = "127.0.0.1"
+DEFAULT_HOST = "0.0.0.0"  # Écoute sur toutes les interfaces pour permettre les connexions externes
 DEFAULT_PORT = 8888
 MAX_CONNECTIONS = 10
 BUFFER_SIZE = 4096

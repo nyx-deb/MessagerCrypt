@@ -191,6 +191,46 @@ L'application affichera :
 3. **Démarrer l'écoute** des connexions
 4. **Gérer les clients** connectés
 
+### 🌐 Connexion Entre PC
+
+#### 🖥️ **Sur le PC SERVEUR :**
+1. **Démarrer le serveur :**
+   ```bash
+   python src/main.py
+   ```
+2. **Choisir :** "Démarrer le serveur"
+3. **Le serveur écoute sur :** `0.0.0.0:8888` (toutes les interfaces)
+
+#### 💻 **Sur le PC CLIENT :**
+1. **Démarrer l'application :**
+   ```bash
+   python src/main.py
+   ```
+2. **Choisir :** "Se connecter"
+3. **Saisir l'IP du serveur :** `IP_DU_PC_SERVEUR` (ex: 192.168.1.100)
+4. **Port :** `8888`
+
+#### 🔥 **Configuration du Firewall :**
+
+**Option 1 - Automatique (Windows) :**
+```bash
+# Exécuter en tant qu'administrateur
+python configure_firewall.py
+```
+
+**Option 2 - Manuelle :**
+1. **Panneau de configuration** > **Pare-feu Windows Defender**
+2. **Paramètres avancés** > **Règles de trafic entrant**
+3. **Nouvelle règle** > **Port** > **TCP** > **8888**
+4. **Autoriser la connexion** > **Tous les profils**
+5. **Nom :** "MessagerCrypt"
+
+#### 🌐 **Vérifications Réseau :**
+- ✅ Les deux PC sont sur le même réseau
+- ✅ Le firewall autorise le port 8888
+- ✅ Les routeurs permettent la communication
+- ✅ Le serveur écoute sur `0.0.0.0:8888`
+
 ### 👤 Inscription d'Utilisateur
 
 1. **Sélectionner "S'inscrire"** (Option 2)
@@ -232,6 +272,61 @@ L'application affichera :
 - **Notifications instantanées** lors de la réception
 - **Affichage automatique** des nouveaux messages
 - **Sauvegarde automatique** dans l'historique
+
+### 🔧 Dépannage des Connexions
+
+#### ❌ **Problème : Impossible de se connecter entre PC**
+
+**Solutions :**
+1. **Vérifier l'IP du serveur :**
+   ```bash
+   # Sur le PC serveur, récupérer l'IP
+   ipconfig  # Windows
+   ifconfig  # Linux/Mac
+   ```
+
+2. **Tester la connectivité :**
+   ```bash
+   # Sur le PC client
+   ping IP_DU_SERVEUR
+   telnet IP_DU_SERVEUR 8888
+   ```
+
+3. **Vérifier le firewall :**
+   - Exécuter `python configure_firewall.py` en tant qu'administrateur
+   - Ou configurer manuellement le port 8888
+
+4. **Vérifier la configuration réseau :**
+   - Les deux PC doivent être sur le même réseau
+   - Vérifier les paramètres du routeur/switch
+
+#### ❌ **Problème : Le serveur ne démarre pas**
+
+**Solutions :**
+1. **Vérifier que le port n'est pas utilisé :**
+   ```bash
+   netstat -an | findstr 8888  # Windows
+   netstat -tulpn | grep 8888  # Linux
+   ```
+
+2. **Changer le port si nécessaire :**
+   - Modifier `DEFAULT_PORT` dans `config/settings.py`
+
+3. **Vérifier les permissions :**
+   - Exécuter en tant qu'administrateur si nécessaire
+
+#### ❌ **Problème : Messages non reçus**
+
+**Solutions :**
+1. **Vérifier l'authentification :**
+   - S'assurer que les deux utilisateurs sont connectés
+   - Vérifier les identifiants
+
+2. **Vérifier les logs :**
+   - Consulter `logs/server.log` et `logs/client.log`
+
+3. **Redémarrer les connexions :**
+   - Déconnecter et reconnecter les clients
 
 ---
 

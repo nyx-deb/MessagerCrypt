@@ -14,3 +14,8 @@ config/settings_local.py
 
 # Ignorer la base de données locale
 data/messages.db
+
+# Dossiers à ignorer
+data/
+__pycache__/
+*.pyc
