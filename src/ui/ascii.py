@@ -369,4 +369,4 @@ class ASCIIArt:
         self.show_cyber_animation()
         time.sleep(1)
         
-        print(f"\n{self.colors['bright_green']}🚀 MessagerCrypt prêt à l'emploi !{self.colors['reset']}\n")
+        print(f"\n{self.colors['bright_green']}🚀 MessagerCrypt prêt à l'emploi !{self.colors['reset']}\n") 
