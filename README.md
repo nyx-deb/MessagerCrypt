@@ -2,7 +2,7 @@
 
 <div align="center">
 
-  <img alt="MessagerCrypt" src="./MessagerCrypt.png" width="900" />
+  <img alt="MessagerCrypt" src="MessagerCrypt.png" width="900" />
 
 
 **🔐 Messagerie Sécurisée Terminal - Chiffrement End-to-End**
