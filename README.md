@@ -1,5 +1,3 @@
-# 🥷🏾 MessagerCrypt
-
 <div align="center">
 
   <img alt="MessagerCrypt" src="MessagerCrypt.png"/>
