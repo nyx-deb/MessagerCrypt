@@ -168,6 +168,105 @@ class KeyManager:
         except Exception:
             return False
     
+    def register_user(self, username: str, password: str, public_key_pem: bytes) -> bool:
+        """
+        Enregistre un utilisateur distant (clé publique uniquement)
+        
+        Si l'utilisateur existe déjà, la mise à jour n'est autorisée
+        que si le mot de passe fourni correspond à l'existant.
+        
+        Args:
+            username: Nom d'utilisateur
+            password: Mot de passe
+            public_key_pem: Clé publique au format PEM
+            
+        Returns:
+            bool: True si succès
+        """
+        try:
+            user_data = self._load_user_data(username)
+            
+            if user_data and user_data.get("password_hash"):
+                try:
+                    self.ph.verify(user_data["password_hash"], password)
+                except VerifyMismatchError:
+                    return False
+            
+            self._save_user_keys({
+                "username": username,
+                "password_hash": self.ph.hash(password),
+                "public_key": base64.b64encode(public_key_pem).decode(),
+                "encrypted_private_key": "",
+                "salt": "",
+                "nonce": "",
+                "created_at": self._get_timestamp()
+            })
+            return True
+            
+        except Exception:
+            return False
+    
+    def verify_user(self, username: str, password: str) -> Optional[bytes]:
+        """
+        Vérifie des identifiants et retourne la clé publique
+        
+        Contrairement à load_user_keys, ne nécessite pas de clé privée
+        localement (usage serveur).
+        
+        Args:
+            username: Nom d'utilisateur
+            password: Mot de passe
+            
+        Returns:
+            Optional[bytes]: Clé publique PEM ou None si échec
+        """
+        try:
+            user_data = self._load_user_data(username)
+            if not user_data or not user_data.get("password_hash"):
+                return None
+            
+            try:
+                self.ph.verify(user_data["password_hash"], password)
+            except VerifyMismatchError:
+                return None
+            
+            return base64.b64decode(user_data["public_key"])
+            
+        except Exception:
+            return None
+    
+    def cache_public_key(self, username: str, public_key_pem: bytes) -> bool:
+        """
+        Met en cache la clé publique d'un utilisateur distant
+        
+        Args:
+            username: Nom d'utilisateur
+            public_key_pem: Clé publique au format PEM
+            
+        Returns:
+            bool: True si succès
+        """
+        try:
+            user_data = self._load_user_data(username)
+            
+            if user_data:
+                user_data["public_key"] = base64.b64encode(public_key_pem).decode()
+                self._save_user_keys(user_data)
+            else:
+                self._save_user_keys({
+                    "username": username,
+                    "password_hash": "",
+                    "public_key": base64.b64encode(public_key_pem).decode(),
+                    "encrypted_private_key": "",
+                    "salt": "",
+                    "nonce": "",
+                    "created_at": self._get_timestamp()
+                })
+            return True
+            
+        except Exception:
+            return False
+    
     def _save_user_keys(self, user_data: Dict) -> None:
         """Sauvegarde les données utilisateur"""
         try:

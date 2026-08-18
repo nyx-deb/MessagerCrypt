@@ -165,9 +165,16 @@ class MessagerCryptApp:
                 self.menu_manager.show_error("Les mots de passe ne correspondent pas")
                 return
             
-            # Création du client pour l'inscription
+            # Création du client pour l'inscription avec l'IP et port spécifiés
             if self.client is None:
-                self.client = MessagerCryptClient()
+                self.client = MessagerCryptClient(
+                    host=form_data.get('server_ip', '127.0.0.1'),
+                    port=form_data.get('server_port', 8888)
+                )
+            
+            # Connexion au serveur
+            if not self.client.connect():
+                return
             
             # Inscription
             success = self.client.register(form_data['username'], form_data['password'])

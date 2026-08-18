@@ -5,6 +5,7 @@ import unittest
 import threading
 import time
 import json
+import base64
 from unittest.mock import Mock, patch
 from src.server import MessagerCryptServer
 from src.client import MessagerCryptClient
@@ -58,26 +59,88 @@ class TestMessagerCryptServer(unittest.TestCase):
     
     def test_message_processing(self):
         """Test de traitement des messages"""
-        # Simulation d'un message d'authentification
-        auth_message = {
+        mock_socket = Mock()
+        client_id = "127.0.0.1:12345"
+        self.server.clients[client_id] = {
+            'socket': mock_socket,
+            'address': ("127.0.0.1", 12345),
+            'username': None,
+            'authenticated': False,
+            'session_token': None,
+            'connected_at': time.time()
+        }
+        
+        auth_message = json.dumps({
             "type": "auth",
             "username": "testuser",
             "password": "testpass"
+        }).encode('utf-8')
+        
+        with patch.object(self.server.key_manager, 'verify_user') as mock_verify:
+            mock_verify.return_value = b"mock_public_key"
+            
+            self.server._process_message(client_id, auth_message)
+            
+            self.assertTrue(self.server.clients[client_id]['authenticated'])
+            mock_socket.send.assert_called()
+    
+    def test_remote_registration_handling(self):
+        """Test de gestion d'inscription distante"""
+        mock_socket = Mock()
+        client_id = "127.0.0.1:12346"
+        self.server.clients[client_id] = {
+            'socket': mock_socket,
+            'address': ("127.0.0.1", 12346),
+            'username': None,
+            'authenticated': False,
+            'session_token': None,
+            'connected_at': time.time()
         }
         
-        # Mock des méthodes nécessaires
-        with patch.object(self.server.key_manager, 'load_user_keys') as mock_load:
-            mock_load.return_value = {
-                "username": "testuser",
-                "public_key": b"mock_public_key",
-                "private_key": b"mock_private_key",
-                "status": "success"
-            }
+        register_message = json.dumps({
+            "type": "register",
+            "username": "newuser",
+            "password": "newpass",
+            "public_key": base64.b64encode(b"mock_public_key").decode()
+        }).encode('utf-8')
+        
+        with patch.object(self.server.key_manager, 'register_user') as mock_register:
+            mock_register.return_value = True
             
-            # Test du traitement du message
-            # Note: Ce test nécessiterait une connexion client réelle
-            # pour tester complètement le traitement des messages
-            pass
+            self.server._process_message(client_id, register_message)
+            
+            mock_register.assert_called_once()
+            mock_socket.send.assert_called()
+            sent = json.loads(mock_socket.send.call_args[0][0].decode('utf-8'))
+            self.assertEqual(sent['type'], 'register_success')
+    
+    def test_get_public_key_handling(self):
+        """Test de distribution de clé publique"""
+        mock_socket = Mock()
+        client_id = "127.0.0.1:12347"
+        self.server.clients[client_id] = {
+            'socket': mock_socket,
+            'address': ("127.0.0.1", 12347),
+            'username': None,
+            'authenticated': False,
+            'session_token': None,
+            'connected_at': time.time()
+        }
+        
+        key_request = json.dumps({
+            "type": "get_public_key",
+            "username": "friend"
+        }).encode('utf-8')
+        
+        with patch.object(self.server.key_manager, 'get_public_key') as mock_get_key:
+            mock_get_key.return_value = b"mock_public_key"
+            
+            self.server._process_message(client_id, key_request)
+            
+            sent = json.loads(mock_socket.send.call_args[0][0].decode('utf-8'))
+            self.assertEqual(sent['type'], 'public_key')
+            self.assertEqual(sent['username'], 'friend')
+            self.assertEqual(base64.b64decode(sent['public_key']), b"mock_public_key")
     
     def test_client_disconnection(self):
         """Test de déconnexion de client"""
@@ -192,23 +255,35 @@ class TestMessagerCryptClient(unittest.TestCase):
     
     def test_user_registration(self):
         """Test d'inscription d'utilisateur"""
+        # Simulation d'une connexion établie
+        self.client.connected = True
+        
+        # Simulation de la réponse du serveur lors de l'envoi
+        def fake_send(message):
+            if message.get('type') == 'register':
+                self.client._handle_received_message({'type': 'register_success'})
+        
         # Mock des méthodes nécessaires
         with patch.object(self.client.key_manager, 'load_user_keys') as mock_load:
             mock_load.return_value = None  # Utilisateur n'existe pas
             
-            with patch.object(self.client.key_manager, 'generate_user_keys') as mock_generate:
-                mock_generate.return_value = {
-                    "username": "testuser",
-                    "public_key": b"mock_public_key",
-                    "private_key": b"mock_private_key",
-                    "status": "success"
-                }
+            with patch.object(self.client.key_manager, 'get_public_key') as mock_exists:
+                mock_exists.return_value = None
                 
-                # Test d'inscription
-                success = self.client.register("testuser", "testpass")
-                
-                # Vérification
-                self.assertTrue(success)
+                with patch.object(self.client.key_manager, 'generate_user_keys') as mock_generate:
+                    mock_generate.return_value = {
+                        "username": "testuser",
+                        "public_key": b"mock_public_key",
+                        "private_key": b"mock_private_key",
+                        "status": "success"
+                    }
+                    
+                    with patch.object(self.client, '_send_message', side_effect=fake_send):
+                        # Test d'inscription
+                        success = self.client.register("testuser", "testpass")
+                        
+                        # Vérification
+                        self.assertTrue(success)
     
     def test_message_sending(self):
         """Test d'envoi de message"""
@@ -347,13 +422,8 @@ class TestNetworkIntegration(unittest.TestCase):
         time.sleep(1)
         
         # Connexion du client
-        with patch.object(self.server.key_manager, 'load_user_keys') as mock_server_load:
-            mock_server_load.return_value = {
-                "username": "testuser",
-                "public_key": b"mock_public_key",
-                "private_key": b"mock_private_key",
-                "status": "success"
-            }
+        with patch.object(self.server.key_manager, 'verify_user') as mock_verify:
+            mock_verify.return_value = b"mock_public_key"
             
             with patch.object(self.client.key_manager, 'load_user_keys') as mock_load:
                 mock_load.return_value = {

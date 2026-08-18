@@ -6,6 +6,7 @@ import socket
 import json
 import threading
 import time
+import base64
 from typing import Dict, List, Optional, Tuple
 import logging
 
@@ -28,9 +29,11 @@ class MessagerCryptClient:
         self.socket = None
         self.connected = False
         self.authenticated = False
+        self.registered = False
         self.username = None
         self.session_token = None
         self.user_keys = None
+        self._pending_public_key = None
         
         # Modules
         self.encryption_manager = EncryptionManager()
@@ -149,21 +152,41 @@ class MessagerCryptClient:
             return False
     
     def register(self, username: str, password: str) -> bool:
-        """S'inscrit auprès du serveur"""
+        """S'inscrit auprès du serveur distant"""
         try:
-            # Vérification que l'utilisateur n'existe pas déjà
+            if not self.connected:
+                self.ascii_art.show_error("Non connecté au serveur")
+                return False
+            
+            local_exists = self.key_manager.get_public_key(username) is not None
             existing_keys = self.key_manager.load_user_keys(username, password)
-            if existing_keys:
+            
+            if local_exists and not existing_keys:
                 self.ascii_art.show_error("Utilisateur déjà existant")
                 return False
             
-            # Génération des clés
-            user_keys = self.key_manager.generate_user_keys(username, password)
-            if user_keys["status"] == "success":
-                return True
+            if existing_keys:
+                public_key_pem = existing_keys["public_key"]
             else:
-                return False
-                
+                generated = self.key_manager.generate_user_keys(username, password)
+                if generated["status"] != "success":
+                    return False
+                public_key_pem = generated["public_key"]
+            
+            register_message = {
+                'type': 'register',
+                'username': username,
+                'password': password,
+                'public_key': base64.b64encode(public_key_pem).decode()
+            }
+            
+            self.registered = False
+            self._send_message(register_message)
+            
+            time.sleep(1)
+            
+            return self.registered
+            
         except Exception as e:
             self.logger.error(f"Erreur lors de l'inscription: {e}")
             self.ascii_art.show_error(f"Erreur d'inscription: {e}")
@@ -178,6 +201,12 @@ class MessagerCryptClient:
             
             # Récupération de la clé publique du destinataire
             recipient_public_key = self.key_manager.get_public_key(recipient)
+            
+            if not recipient_public_key:
+                recipient_public_key = self._request_public_key(recipient)
+                if recipient_public_key:
+                    self.key_manager.cache_public_key(recipient, recipient_public_key)
+            
             if not recipient_public_key:
                 self.ascii_art.show_error(f"Utilisateur {recipient} introuvable")
                 return False
@@ -305,6 +334,28 @@ class MessagerCryptClient:
             self.logger.error(f"Erreur lors de la recherche: {e}")
             return []
     
+    def _request_public_key(self, username: str) -> Optional[bytes]:
+        """Demande la clé publique d'un utilisateur au serveur"""
+        try:
+            self._pending_public_key = None
+            
+            request = {
+                'type': 'get_public_key',
+                'username': username
+            }
+            self._send_message(request)
+            
+            for _ in range(10):
+                time.sleep(0.1)
+                if self._pending_public_key is not None:
+                    return self._pending_public_key
+            
+            return None
+            
+        except Exception as e:
+            self.logger.error(f"Erreur lors de la demande de clé publique: {e}")
+            return None
+    
     def _send_message(self, message: Dict):
         """Envoie un message au serveur"""
         try:
@@ -340,6 +391,15 @@ class MessagerCryptClient:
             self.session_token = message.get('session_token')
             # Authentification réussie - gérée par l'interface principale
             
+        elif message_type == 'register_success':
+            self.registered = True
+            
+        elif message_type == 'public_key':
+            try:
+                self._pending_public_key = base64.b64decode(message.get('public_key', ''))
+            except Exception:
+                self._pending_public_key = b''
+            
         elif message_type == 'error':
             # Erreur serveur - gérée par l'interface principale
             pass
@@ -350,9 +410,6 @@ class MessagerCryptClient:
             
             # Déchiffrement du message
             try:
-                import json
-                import base64
-                
                 # Parse du message chiffré
                 message_packet = json.loads(encrypted_content)
                 

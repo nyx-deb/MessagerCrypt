@@ -2,6 +2,29 @@
 
 Tous les changements notables du projet sont documentés ici.
 
+## [Non publié] - 2026-08-19
+
+### Ajouté
+
+- Inscription distante : le client s'inscrit désormais auprès du serveur
+  (message `register` avec nom d'utilisateur, mot de passe et clé publique).
+  La clé privée reste chiffrée localement, le serveur ne stocke que la clé publique
+  et le hachage Argon2 du mot de passe (`KeyManager.register_user`).
+- Distribution des clés publiques : nouveau message `get_public_key`. Lors d'un envoi,
+  si le destinataire est inconnu localement, le client récupère sa clé auprès du
+  serveur puis la met en cache (`KeyManager.cache_public_key`).
+- Le formulaire d'inscription demande désormais l'adresse IP et le port du serveur,
+  comme le formulaire de connexion.
+- `KeyManager.verify_user` : vérification d'identifiants sans clé privée locale (usage serveur).
+
+### Modifié
+
+- Le serveur utilise `data/server_keys.json` au lieu de `data/user_keys.json` :
+  serveur et client sur une même machine ne s'écrasent plus mutuellement les clés.
+- `_handle_authentication` (serveur) utilise `verify_user` au lieu de `load_user_keys`.
+- Protection anti-détournement : la ré-enregistrement d'un nom existant sur le serveur
+  nécessite le mot de passe d'origine (permet la rotation de clé légitime).
+
 ## [Non publié] - 2026-08-18
 
 ### Corrigé

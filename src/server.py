@@ -11,7 +11,7 @@ from typing import Dict, List, Optional, Tuple
 from datetime import datetime
 import logging
 
-from config.settings import DEFAULT_HOST, DEFAULT_PORT, MAX_CONNECTIONS, BUFFER_SIZE, DEBUG
+from config.settings import DEFAULT_HOST, DEFAULT_PORT, MAX_CONNECTIONS, BUFFER_SIZE, DEBUG, DATA_DIR
 from .crypto.encryption import EncryptionManager
 from .crypto.auth import AuthManager
 from .crypto.keys import KeyManager
@@ -36,6 +36,7 @@ class MessagerCryptServer:
         self.encryption_manager = EncryptionManager()
         self.auth_manager = AuthManager()
         self.key_manager = KeyManager()
+        self.key_manager.keys_file = DATA_DIR / "server_keys.json"
         self.database = EncryptedDatabase()
         self.message_manager = MessageManager()
         self.ascii_art = ASCIIArt()
@@ -168,6 +169,10 @@ class MessagerCryptServer:
             
             if message_type == 'auth':
                 self._handle_authentication(client_id, message)
+            elif message_type == 'register':
+                self._handle_registration(client_id, message)
+            elif message_type == 'get_public_key':
+                self._handle_get_public_key(client_id, message)
             elif message_type == 'message':
                 self._handle_message(client_id, message)
             elif message_type == 'get_users':
@@ -196,9 +201,9 @@ class MessagerCryptServer:
                 return
             
             # Vérification des identifiants
-            user_keys = self.key_manager.load_user_keys(username, password)
+            public_key_pem = self.key_manager.verify_user(username, password)
             
-            if user_keys:
+            if public_key_pem:
                 # Génération d'un token de session
                 session_token = self.auth_manager.create_session_token(
                     username, self.encryption_manager.generate_aes_key()
@@ -225,7 +230,7 @@ class MessagerCryptServer:
                     'type': 'auth_success',
                     'message': 'Authentification réussie',
                     'session_token': session_token,
-                    'public_key': base64.b64encode(user_keys['public_key']).decode()
+                    'public_key': base64.b64encode(public_key_pem).decode()
                 }
                 
                 self._send_message(client_id, response)
@@ -237,6 +242,62 @@ class MessagerCryptServer:
         except Exception as e:
             self.logger.error(f"Erreur lors de l'authentification: {e}")
             self._send_error(client_id, "Erreur d'authentification")
+    
+    def _handle_registration(self, client_id: str, message: Dict):
+        """Gère l'inscription d'un client distant"""
+        try:
+            username = message.get('username')
+            password = message.get('password')
+            public_key_b64 = message.get('public_key')
+            
+            if not username or not password or not public_key_b64:
+                self._send_error(client_id, "Données d'inscription incomplètes")
+                return
+            
+            try:
+                public_key_pem = base64.b64decode(public_key_b64)
+            except Exception:
+                self._send_error(client_id, "Clé publique invalide")
+                return
+            
+            if self.key_manager.register_user(username, password, public_key_pem):
+                response = {
+                    'type': 'register_success',
+                    'message': 'Inscription réussie'
+                }
+                self._send_message(client_id, response)
+                self.logger.info(f"Utilisateur {username} inscrit")
+            else:
+                self._send_error(client_id, "Nom d'utilisateur déjà pris ou mot de passe invalide")
+                
+        except Exception as e:
+            self.logger.error(f"Erreur lors de l'inscription: {e}")
+            self._send_error(client_id, "Erreur d'inscription")
+    
+    def _handle_get_public_key(self, client_id: str, message: Dict):
+        """Envoie la clé publique d'un utilisateur demandé"""
+        try:
+            username = message.get('username')
+            
+            if not username:
+                self._send_error(client_id, "Nom d'utilisateur requis")
+                return
+            
+            public_key = self.key_manager.get_public_key(username)
+            
+            if public_key:
+                response = {
+                    'type': 'public_key',
+                    'username': username,
+                    'public_key': base64.b64encode(public_key).decode()
+                }
+                self._send_message(client_id, response)
+            else:
+                self._send_error(client_id, f"Utilisateur {username} introuvable")
+                
+        except Exception as e:
+            self.logger.error(f"Erreur lors de l'envoi de la clé publique: {e}")
+            self._send_error(client_id, "Erreur interne du serveur")
     
     def _handle_message(self, client_id: str, message: Dict):
         """Gère l'envoi d'un message"""

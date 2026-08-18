@@ -229,9 +229,15 @@ python configure_firewall.py
 ### 👤 Inscription d'Utilisateur
 
 1. **Sélectionner "S'inscrire"** (Option 2)
-2. **Saisir le nom d'utilisateur** (3-20 caractères)
-3. **Choisir un mot de passe** sécurisé
-4. **Confirmer l'inscription**
+2. **Saisir l'adresse IP et le port du serveur** (Entrée = `127.0.0.1:8888`)
+3. **Saisir le nom d'utilisateur** (3-20 caractères)
+4. **Choisir un mot de passe** sécurisé
+5. **Confirmer le mot de passe**
+
+L'inscription est effectuée auprès du serveur : la paire de clés est générée
+localement, la clé privée reste chiffrée sur votre machine et seule la clé publique
+est transmise au serveur. Les utilisateurs distants peuvent ainsi s'inscrire et
+échanger des messages sans partage de fichiers manuel.
 
 ### 🔐 Connexion
 

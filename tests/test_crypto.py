@@ -157,6 +157,68 @@ class TestKeyManager(unittest.TestCase):
         users = self.key_manager.list_users()
         self.assertIn("user1", users)
         self.assertIn("user2", users)
+    
+    def test_remote_user_registration(self):
+        """Test d'enregistrement d'un utilisateur distant"""
+        _, public_key = self.key_manager.encryption_manager.generate_rsa_keypair()
+        
+        success = self.key_manager.register_user("remote", "remotepass", public_key)
+        self.assertTrue(success)
+        
+        retrieved = self.key_manager.get_public_key("remote")
+        self.assertEqual(retrieved, public_key)
+    
+    def test_remote_registration_protection(self):
+        """Test de protection contre le détournement de compte"""
+        _, public_key = self.key_manager.encryption_manager.generate_rsa_keypair()
+        self.key_manager.register_user("remote", "remotepass", public_key)
+        
+        _, attacker_key = self.key_manager.encryption_manager.generate_rsa_keypair()
+        success = self.key_manager.register_user("remote", "wrongpass", attacker_key)
+        self.assertFalse(success)
+        self.assertEqual(self.key_manager.get_public_key("remote"), public_key)
+    
+    def test_remote_registration_rotation(self):
+        """Test de rotation de clé via ré-enregistrement"""
+        _, old_key = self.key_manager.encryption_manager.generate_rsa_keypair()
+        self.key_manager.register_user("remote", "remotepass", old_key)
+        
+        _, new_key = self.key_manager.encryption_manager.generate_rsa_keypair()
+        success = self.key_manager.register_user("remote", "remotepass", new_key)
+        self.assertTrue(success)
+        self.assertEqual(self.key_manager.get_public_key("remote"), new_key)
+    
+    def test_verify_user(self):
+        """Test de vérification d'identifiants distants"""
+        _, public_key = self.key_manager.encryption_manager.generate_rsa_keypair()
+        self.key_manager.register_user("remote", "remotepass", public_key)
+        
+        result = self.key_manager.verify_user("remote", "remotepass")
+        self.assertEqual(result, public_key)
+        
+        self.assertIsNone(self.key_manager.verify_user("remote", "wrongpass"))
+        self.assertIsNone(self.key_manager.verify_user("ghost", "whatever"))
+    
+    def test_verify_user_with_local_account(self):
+        """Test verify_user avec un compte local complet"""
+        generated = self.key_manager.generate_user_keys("localuser", "localpass")
+        
+        result = self.key_manager.verify_user("localuser", "localpass")
+        self.assertEqual(result, generated["public_key"])
+        
+        self.assertIsNone(self.key_manager.verify_user("localuser", "wrongpass"))
+    
+    def test_public_key_caching(self):
+        """Test de mise en cache d'une clé publique distante"""
+        _, public_key = self.key_manager.encryption_manager.generate_rsa_keypair()
+        
+        success = self.key_manager.cache_public_key("friend", public_key)
+        self.assertTrue(success)
+        self.assertEqual(self.key_manager.get_public_key("friend"), public_key)
+        
+        _, new_key = self.key_manager.encryption_manager.generate_rsa_keypair()
+        self.key_manager.cache_public_key("friend", new_key)
+        self.assertEqual(self.key_manager.get_public_key("friend"), new_key)
 
 
 class TestAuthManager(unittest.TestCase):

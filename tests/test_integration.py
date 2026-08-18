@@ -111,6 +111,42 @@ class TestMessagerCryptIntegration(unittest.TestCase):
         messages = db.get_messages("recipient", 10)
         self.assertIsInstance(messages, list)
     
+    def test_full_remote_registration_flow(self):
+        """Test du flux complet d'inscription distante"""
+        # Démarrage du serveur
+        server_thread = threading.Thread(target=self.server.start, daemon=True)
+        server_thread.start()
+        
+        # Attente du démarrage
+        time.sleep(1)
+        
+        # Connexion du client
+        success = self.client.connect()
+        self.assertTrue(success)
+        
+        # Inscription distante (génération de clés réelle)
+        registered = self.client.register("alice", "alicepass")
+        self.assertTrue(registered)
+        
+        # Vérification côté serveur
+        self.assertIn("alice", self.server.key_manager.list_users())
+        server_key = self.server.key_manager.get_public_key("alice")
+        self.assertIsNotNone(server_key)
+        self.assertGreater(len(server_key), 0)
+        
+        # Vérification : le client conserve sa clé privée localement
+        client_keys = self.client.key_manager.load_user_keys("alice", "alicepass")
+        self.assertIsNotNone(client_keys)
+        self.assertEqual(client_keys["public_key"], server_key)
+        
+        # Distribution de la clé publique à un autre client
+        fetched = self.client._request_public_key("alice")
+        self.assertIsNotNone(fetched)
+        self.assertEqual(fetched, server_key)
+        
+        # Arrêt du serveur
+        self.server.stop()
+    
     def test_server_client_communication(self):
         """Test de communication serveur-client"""
         # Démarrage du serveur
@@ -121,13 +157,8 @@ class TestMessagerCryptIntegration(unittest.TestCase):
         time.sleep(1)
         
         # Connexion du client
-        with patch.object(self.server.key_manager, 'load_user_keys') as mock_server_load:
-            mock_server_load.return_value = {
-                "username": "testuser",
-                "public_key": b"mock_public_key",
-                "private_key": b"mock_private_key",
-                "status": "success"
-            }
+        with patch.object(self.server.key_manager, 'verify_user') as mock_verify:
+            mock_verify.return_value = b"mock_public_key"
             
             with patch.object(self.client.key_manager, 'load_user_keys') as mock_load:
                 mock_load.return_value = {
