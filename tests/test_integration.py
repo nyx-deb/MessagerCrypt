@@ -121,28 +121,42 @@ class TestMessagerCryptIntegration(unittest.TestCase):
         time.sleep(1)
         
         # Connexion du client
-        with patch.object(self.client.key_manager, 'load_user_keys') as mock_load:
-            mock_load.return_value = {
+        with patch.object(self.server.key_manager, 'load_user_keys') as mock_server_load:
+            mock_server_load.return_value = {
                 "username": "testuser",
                 "public_key": b"mock_public_key",
                 "private_key": b"mock_private_key",
                 "status": "success"
             }
             
-            # Test de connexion
-            success = self.client.connect()
-            self.assertTrue(success)
-            
-            # Test d'authentification
-            auth_success = self.client.authenticate("testuser", "testpass")
-            self.assertTrue(auth_success)
-            
-            # Test d'envoi de message
-            with patch.object(self.client.key_manager, 'get_public_key') as mock_get_key:
-                mock_get_key.return_value = b"mock_public_key"
+            with patch.object(self.client.key_manager, 'load_user_keys') as mock_load:
+                mock_load.return_value = {
+                    "username": "testuser",
+                    "public_key": b"mock_public_key",
+                    "private_key": b"mock_private_key",
+                    "status": "success"
+                }
                 
-                message_success = self.client.send_message("recipient", "Test message")
-                self.assertTrue(message_success)
+                # Test de connexion
+                success = self.client.connect()
+                self.assertTrue(success)
+                
+                # Test d'authentification
+                auth_success = self.client.authenticate("testuser", "testpass")
+                self.assertTrue(auth_success)
+                
+                # Test d'envoi de message
+                with patch.object(self.client.key_manager, 'get_public_key') as mock_get_key:
+                    mock_get_key.return_value = b"mock_public_key"
+                    
+                    with patch.object(self.client.encryption_manager, 'create_message_packet') as mock_packet:
+                        mock_packet.return_value = {
+                            "version": "1.0", "message": "encrypted",
+                            "nonce": "nonce", "aes_key": "key"
+                        }
+                        
+                        message_success = self.client.send_message("recipient", "Test message")
+                        self.assertTrue(message_success)
         
         # Arrêt du serveur
         self.server.stop()

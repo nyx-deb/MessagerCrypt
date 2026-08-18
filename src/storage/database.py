@@ -125,14 +125,14 @@ class EncryptedDatabase:
             user_data_json = json.dumps(user_data).encode()
             nonce, encrypted_data = self._encrypt_data(user_data_json, key)
             
-            # Sauvegarde en base
+            # Sauvegarde en base : sel + nonce + ciphertext
             conn = sqlite3.connect(str(self.db_path))
             cursor = conn.cursor()
             
             cursor.execute('''
                 INSERT INTO users (username, encrypted_data)
                 VALUES (?, ?)
-            ''', (username, encrypted_data))
+            ''', (username, salt + nonce + encrypted_data))
             
             conn.commit()
             conn.close()
@@ -167,10 +167,11 @@ class EncryptedDatabase:
             if result:
                 # Déchiffrement des données
                 encrypted_data = result[0]
-                salt = secrets.token_bytes(SALT_SIZE)  # En production, stocker le sel
+                salt = encrypted_data[:SALT_SIZE]
+                nonce = encrypted_data[SALT_SIZE:SALT_SIZE + 12]
+                ciphertext = encrypted_data[SALT_SIZE + 12:]
+                
                 key = self._derive_key(self.db_key, salt)
-                nonce = encrypted_data[:12]  # Les 12 premiers bytes sont le nonce
-                ciphertext = encrypted_data[12:]
                 
                 decrypted_data = self._decrypt_data(ciphertext, key, nonce)
                 return json.loads(decrypted_data.decode())
@@ -414,7 +415,7 @@ class EncryptedDatabase:
             cursor = conn.cursor()
             
             cursor.execute("""
-                SELECT sender, recipient, message, timestamp, is_read
+                SELECT sender, recipient, encrypted_message, timestamp, is_read
                 FROM messages 
                 WHERE sender = ? OR recipient = ?
                 ORDER BY timestamp DESC
@@ -453,7 +454,7 @@ class EncryptedDatabase:
             cursor = conn.cursor()
             
             cursor.execute("""
-                SELECT sender, recipient, message, timestamp, is_read
+                SELECT sender, recipient, encrypted_message, timestamp, is_read
                 FROM messages 
                 WHERE recipient = ?
                 ORDER BY timestamp DESC
@@ -492,10 +493,10 @@ class EncryptedDatabase:
             cursor = conn.cursor()
             
             cursor.execute("""
-                SELECT sender, recipient, message, timestamp, is_read
+                SELECT sender, recipient, encrypted_message, timestamp, is_read
                 FROM messages 
                 WHERE (sender = ? OR recipient = ?) 
-                AND message LIKE ?
+                AND message_hash LIKE ?
                 ORDER BY timestamp DESC
             """, (username, username, f'%{query}%'))
             

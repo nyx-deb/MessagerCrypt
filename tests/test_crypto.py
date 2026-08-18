@@ -98,9 +98,10 @@ class TestKeyManager(unittest.TestCase):
     """Tests pour KeyManager"""
     
     def setUp(self):
+        from pathlib import Path
         self.key_manager = KeyManager()
         self.temp_dir = tempfile.mkdtemp()
-        self.key_manager.keys_file = os.path.join(self.temp_dir, "test_keys.json")
+        self.key_manager.keys_file = Path(self.temp_dir) / "test_keys.json"
     
     def tearDown(self):
         import shutil

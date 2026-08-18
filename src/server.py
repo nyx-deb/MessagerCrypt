@@ -110,15 +110,19 @@ class MessagerCryptServer:
         """Arrête le serveur"""
         self.running = False
         
-        # Fermeture des connexions clients
-        for client_id, client_info in self.clients.items():
+        # Fermeture des connexions clients (copie : le dict est modifié par les threads clients)
+        for client_id, client_info in list(self.clients.items()):
             try:
                 client_info['socket'].close()
             except:
                 pass
         
-        # Fermeture du socket serveur
+        # Fermeture du socket serveur (shutdown réveille le thread bloqué dans accept)
         if self.socket:
+            try:
+                self.socket.shutdown(socket.SHUT_RDWR)
+            except OSError:
+                pass
             self.socket.close()
         
         self.logger.info("Serveur arrêté")

@@ -42,6 +42,18 @@ class ASCIIArt:
         """Efface l'écran du terminal"""
         print('\033[2J\033[H', end='')
     
+    def show_success(self, message: str):
+        """Affiche un message de succès"""
+        print(f"\n{self.colors['green']}✅ {message}{self.colors['reset']}")
+    
+    def show_error(self, message: str):
+        """Affiche un message d'erreur"""
+        print(f"\n{self.colors['red']}❌ {message}{self.colors['reset']}")
+    
+    def show_warning(self, message: str):
+        """Affiche un message d'avertissement"""
+        print(f"\n{self.colors['yellow']}⚠️  {message}{self.colors['reset']}")
+    
     def show_logo(self, color: str = 'red', animated: bool = True):
         """
         Affiche le logo MessagerCrypt

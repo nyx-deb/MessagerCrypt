@@ -71,9 +71,11 @@ class TestEncryptedDatabase(unittest.TestCase):
     
     def test_session_management(self):
         """Test de gestion des sessions"""
+        import time
+        
         username = "testuser"
         session_token = "test_token_123"
-        expires_at = 1234567890.0
+        expires_at = time.time() + 3600
         
         # Création de session
         success = self.db.create_session(username, session_token, expires_at)

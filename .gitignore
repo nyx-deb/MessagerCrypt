@@ -19,3 +19,4 @@ data/messages.db
 data/
 __pycache__/
 *.pyc
+.venv/

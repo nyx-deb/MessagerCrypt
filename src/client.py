@@ -17,7 +17,6 @@ from .storage.database import EncryptedDatabase
 from .storage.messages import MessageManager
 from .ui.ascii import ASCIIArt
 from .ui.menu import MenuManager
-from .ui.ascii import ASCIIArt
 
 
 class MessagerCryptClient:
@@ -109,6 +108,7 @@ class MessagerCryptClient:
         
         if self.socket:
             self.socket.close()
+            self.socket = None
         
         self.logger.info("Déconnecté du serveur")
     
