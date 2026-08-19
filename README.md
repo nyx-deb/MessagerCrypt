@@ -3,76 +3,76 @@
   <img alt="MessagerCrypt" src="MessagerCrypt.png"/>
 
 
-**🔐 Messagerie Sécurisée Terminal - Chiffrement End-to-End**
+**Messagerie Sécurisée Terminal - Chiffrement End-to-End**
 
 [![Python](https://img.shields.io/badge/Python-3.8+-blue.svg)](https://python.org)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![Security](https://img.shields.io/badge/Security-AES256%20%2B%20RSA4096-red.svg)](https://cryptography.io)
 [![Terminal](https://img.shields.io/badge/Terminal-Responsive-orange.svg)](https://rich.readthedocs.io)
 
-**Auteur :** [𝕹𝖎𝖓_𝕾𝖍𝖎𝖓𝖔𝖇𝖎🥷🏾] | **GitHub :** [@Nin-Shinobi](https://github.com/Nin-Shinobi)
+**Auteur :** [𝕹𝖎𝖓_𝕾𝖍𝖎𝖓𝖔𝖇𝖎] | **GitHub :** [@Nin-Shinobi](https://github.com/Nin-Shinobi)
 
 </div>
 
 ---
 
-## 📋 Table des Matières
+## Table des Matières
 
-- [🎯 Description](#-description)
-- [✨ Fonctionnalités](#-fonctionnalités)
-- [🔧 Installation](#-installation)
-- [🚀 Utilisation](#-utilisation)
-- [🏗️ Architecture](#️-architecture)
-- [🔐 Sécurité](#-sécurité)
-- [📊 Performances](#-performances)
-- [🛠️ Configuration](#️-configuration)
-- [🧪 Tests](#-tests)
-- [📚 Documentation](#-documentation)
-- [🤝 Contribution](#-contribution)
-- [📄 Licence](#-licence)
+- [Description](#description)
+- [Fonctionnalités](#fonctionnalités)
+- [Installation](#installation)
+- [Utilisation](#utilisation)
+- [Architecture](#architecture)
+- [Sécurité](#sécurité)
+- [Performances](#performances)
+- [Configuration](#configuration)
+- [Tests](#tests)
+- [Documentation](#documentation)
+- [Contribution](#contribution)
+- [Licence](#licence)
 
 ---
 
-## 🎯 Description
+## Description
 
 **MessagerCrypt** est une application de messagerie sécurisée en ligne de commande qui offre une communication chiffrée de bout en bout. Conçue pour les utilisateurs soucieux de leur vie privée, elle combine une interface terminal moderne et responsive avec des protocoles de chiffrement militaires.
 
-### 🌟 Points Forts
+### Points Forts
 
-- 🔒 **Chiffrement AES-256-GCM + RSA-4096**
-- 🎨 **Interface terminal responsive et moderne**
-- ⚡ **Performances optimisées avec lazy loading**
-- 🛡️ **Sécurité renforcée avec validation des entrées**
-- 📱 **Adaptation automatique à toutes les tailles de terminal**
-- 🗄️ **Base de données SQLite chiffrée**
-- 🔐 **Authentification par mot de passe sécurisé**
+- **Chiffrement AES-256-GCM + RSA-4096**
+- **Interface terminal responsive et moderne**
+- **Performances optimisées avec lazy loading**
+- **Sécurité renforcée avec validation des entrées**
+- **Adaptation automatique à toutes les tailles de terminal**
+- **Base de données SQLite chiffrée**
+- **Authentification par mot de passe sécurisé**
 
 ---
 
-## ✨ Fonctionnalités
+## Fonctionnalités
 
-### 🔐 Sécurité
-- **Chiffrement hybride** : AES-256-GCM pour les messages + RSA-4096 pour les clés
+### Sécurité
+- **Chiffrement hybride**: AES-256-GCM pour les messages + RSA-4096 pour les clés
 - **Hachage des mots de passe** avec Argon2id
 - **Signatures numériques** pour l'authentification
 - **Protection anti-replay** avec nonces et timestamps
 - **Base de données chiffrée** avec SQLite
 
-### 🎨 Interface Utilisateur
+### Interface Utilisateur
 - **ASCII Art animé** avec logo MessagerCrypt
 - **Menus interactifs** avec Rich et Colorama
 - **Interface responsive** qui s'adapte à toutes les tailles de terminal
 - **Animations de chargement** et notifications visuelles
 - **Thème cyberpunk** avec couleurs personnalisables
 
-### 💬 Messagerie
+### Messagerie
 - **Envoi de messages** chiffrés en temps réel
 - **Réception instantanée** avec notifications
 - **Historique des messages** avec recherche
 - **Messages multilignes** avec gestion des retours à la ligne
 - **Statut de lecture** des messages
 
-### ⚡ Performances
+### Performances
 - **Lazy loading** des modules pour un démarrage rapide
 - **Cache intelligent** des clés et validations
 - **Pool de connexions** pour la base de données
@@ -81,15 +81,15 @@
 
 ---
 
-## 🔧 Installation
+## Installation
 
-### 📋 Prérequis
+### Prérequis
 
 - **Python 3.8+** installé sur votre système
 - **pip** (gestionnaire de paquets Python)
 - **Terminal** compatible (Windows, macOS, Linux)
 
-### 🚀 Installation Rapide
+### Installation Rapide
 
 ```bash
 # 1. Cloner le repository
@@ -103,7 +103,7 @@ pip install -r requirements.txt
 python src/main.py
 ```
 
-### 🔧 Installation Détaillée
+### Installation Détaillée
 
 #### Windows
 ```powershell
@@ -132,7 +132,7 @@ chmod +x src/main.py
 python3 src/main.py
 ```
 
-### 📦 Dépendances
+### Dépendances
 
 | Package | Version | Description |
 |---------|---------|-------------|
@@ -146,9 +146,9 @@ python3 src/main.py
 
 ---
 
-## 🚀 Utilisation
+## Utilisation
 
-### 🎬 Premier Lancement
+### Premier Lancement
 
 ```bash
 python src/main.py
@@ -159,33 +159,33 @@ L'application affichera :
 2. **Menu principal** avec options disponibles
 3. **Interface responsive** adaptée à votre terminal
 
-### 📋 Menu Principal
+### Menu Principal
 
 ```
 ╔══════════════════════════════════════════════════════════════════════════════╗
 ║                                                                              ║
-                     MESSAGERCRYPT v1.0 — Sécurisé                            
+                     MESSAGERCRYPT v1.0 - Sécurisé
 ║                                                                              ║
 ╚══════════════════════════════════════════════════════════════════════════════╝
 
-[1] 🖥️  Démarrer le serveur
-[2] 👤  S'inscrire
-[3] 🔐  Se connecter
-[4] 💬  Consulter l'historique
-[5] ⚙️  Configuration
-[6] 🚪  Quitter
+[1] Démarrer le serveur
+[2] S'inscrire
+[3] Se connecter
+[4] Consulter l'historique
+[5] Configuration
+[6] Quitter
 ```
 
-### 🔧 Configuration du Serveur
+### Configuration du Serveur
 
 1. **Démarrer le serveur** (Option 1)
 2. **Configurer l'adresse** et le port
 3. **Démarrer l'écoute** des connexions
 4. **Gérer les clients** connectés
 
-### 🌐 Connexion Entre PC
+### Connexion Entre PC
 
-#### 🖥️ **Sur le PC SERVEUR :**
+#### **Sur le PC SERVEUR :**
 1. **Démarrer le serveur :**
    ```bash
    python src/main.py
@@ -193,7 +193,7 @@ L'application affichera :
 2. **Choisir :** "Démarrer le serveur"
 3. **Le serveur écoute sur :** `0.0.0.0:8888` (toutes les interfaces)
 
-#### 💻 **Sur le PC CLIENT :**
+#### **Sur le PC CLIENT :**
 1. **Démarrer l'application :**
    ```bash
    python src/main.py
@@ -205,7 +205,7 @@ L'application affichera :
    - **Nom d'utilisateur :** Votre nom d'utilisateur
    - **Mot de passe :** Votre mot de passe
 
-#### 🔥 **Configuration du Firewall :**
+#### **Configuration du Firewall :**
 
 **Option 1 - Automatique (Windows) :**
 ```bash
@@ -220,13 +220,13 @@ python configure_firewall.py
 4. **Autoriser la connexion** > **Tous les profils**
 5. **Nom :** "MessagerCrypt"
 
-#### 🌐 **Vérifications Réseau :**
-- ✅ Les deux PC sont sur le même réseau
-- ✅ Le firewall autorise le port 8888
-- ✅ Les routeurs permettent la communication
-- ✅ Le serveur écoute sur `0.0.0.0:8888`
+#### **Vérifications Réseau :**
+- Les deux PC sont sur le même réseau
+- Le firewall autorise le port 8888
+- Les routeurs permettent la communication
+- Le serveur écoute sur `0.0.0.0:8888`
 
-### 👤 Inscription d'Utilisateur
+### Inscription d'Utilisateur
 
 1. **Sélectionner "S'inscrire"** (Option 2)
 2. **Saisir l'adresse IP et le port du serveur** (Entrée = `127.0.0.1:8888`)
@@ -239,13 +239,13 @@ localement, la clé privée reste chiffrée sur votre machine et seule la clé p
 est transmise au serveur. Les utilisateurs distants peuvent ainsi s'inscrire et
 échanger des messages sans partage de fichiers manuel.
 
-### 🔐 Connexion
+### Connexion
 
 1. **Sélectionner "Se connecter"** (Option 3)
 2. **Remplir le formulaire de connexion :**
    ```
    ╔══════════════════════════════════════════════════════════════════════════════╗
-                              🔐 CONNEXION                            
+                               CONNEXION
    ╚══════════════════════════════════════════════════════════════════════════════╝
 
    Configuration du serveur:
@@ -260,28 +260,28 @@ est transmise au serveur. Les utilisateurs distants peuvent ainsi s'inscrire et
    ```
 3. **Accéder à l'interface de messagerie**
 
-#### 💡 **Valeurs par défaut :**
+#### **Valeurs par défaut :**
 - **IP par défaut :** `127.0.0.1` (localhost) si vous appuyez sur Entrée
 - **Port par défaut :** `8888` si vous appuyez sur Entrée
 - **Pour connexion locale :** Laissez les valeurs par défaut
 - **Pour connexion réseau :** Saisissez l'IP du PC serveur
 
-### 💬 Interface de Messagerie
+### Interface de Messagerie
 
 ```
 ╔══════════════════════════════════════════════════════════════════════════════╗
-                         💬 MESSAGERIE - USERNAME                            
+                          MESSAGERIE - USERNAME
 ╚══════════════════════════════════════════════════════════════════════════════╝
 
-[1] 📤 Envoyer un message
-[2] 📥 Messages reçus
-[3] 📜 Historique
-[4] 🔍 Rechercher
-[5] ⚙️  Paramètres
-[6] 🔙 Déconnexion
+[1] Envoyer un message
+[2] Messages reçus
+[3] Historique
+[4] Rechercher
+[5] Paramètres
+[6] Déconnexion
 ```
 
-### 📤 Envoi de Message
+### Envoi de Message
 
 1. **Sélectionner "Envoyer un message"** (Option 1)
 2. **Saisir le destinataire**
@@ -289,15 +289,15 @@ est transmise au serveur. Les utilisateurs distants peuvent ainsi s'inscrire et
 4. **Appuyer sur Entrée** pour nouvelle ligne
 5. **Double Entrée** pour envoyer
 
-### 📥 Réception de Messages
+### Réception de Messages
 
 - **Notifications instantanées** lors de la réception
 - **Affichage automatique** des nouveaux messages
 - **Sauvegarde automatique** dans l'historique
 
-### 🔧 Dépannage des Connexions
+### Dépannage des Connexions
 
-#### ❌ **Problème : Impossible de se connecter entre PC**
+#### **Problème : Impossible de se connecter entre PC**
 
 **Solutions :**
 1. **Vérifier l'IP du serveur :**
@@ -322,7 +322,7 @@ est transmise au serveur. Les utilisateurs distants peuvent ainsi s'inscrire et
    - Les deux PC doivent être sur le même réseau
    - Vérifier les paramètres du routeur/switch
 
-#### ❌ **Problème : Le serveur ne démarre pas**
+#### **Problème : Le serveur ne démarre pas**
 
 **Solutions :**
 1. **Vérifier que le port n'est pas utilisé :**
@@ -337,7 +337,7 @@ est transmise au serveur. Les utilisateurs distants peuvent ainsi s'inscrire et
 3. **Vérifier les permissions :**
    - Exécuter en tant qu'administrateur si nécessaire
 
-#### ❌ **Problème : Messages non reçus**
+#### **Problème : Messages non reçus**
 
 **Solutions :**
 1. **Vérifier l'authentification :**
@@ -352,37 +352,37 @@ est transmise au serveur. Les utilisateurs distants peuvent ainsi s'inscrire et
 
 ---
 
-## 🏗️ Architecture
+## Architecture
 
-### 📁 Structure du Projet
+### Structure du Projet
 
 ```
 MessagerCrypt/
-├── 📁 config/
+├──  config/
 │   └── settings.py          # Configuration globale
-├── 📁 src/
+├──  src/
 │   ├── main.py              # Point d'entrée principal
 │   ├── server.py            # Serveur TCP sécurisé
 │   ├── client.py            # Client de messagerie
-│   ├── 📁 crypto/
+│   ├──  crypto/
 │   │   ├── encryption.py     # Gestionnaire de chiffrement
 │   │   ├── auth.py          # Authentification
 │   │   └── keys.py          # Gestion des clés
-│   ├── 📁 storage/
+│   ├──  storage/
 │   │   ├── database.py      # Base de données chiffrée
 │   │   └── messages.py      # Gestion des messages
-│   ├── 📁 ui/
+│   ├──  ui/
 │   │   ├── ascii.py         # ASCII art et animations
 │   │   └── menu.py          # Interface utilisateur
-│   └── 📁 utils/
+│   └──  utils/
 │       └── helpers.py       # Utilitaires
-├── 📁 data/
+├──  data/
 │   ├── messagercrypt.db     # Base de données
 │   └── user_keys.json       # Clés utilisateurs
-├── 📁 logs/
+├──  logs/
 │   ├── client.log           # Logs client
 │   └── server.log           # Logs serveur
-├── 📁 tests/
+├──  tests/
 │   ├── test_crypto.py       # Tests chiffrement
 │   ├── test_database.py     # Tests base de données
 │   ├── test_network.py      # Tests réseau
@@ -392,7 +392,7 @@ MessagerCrypt/
 └── LICENSE                 # Licence MIT
 ```
 
-### 🔄 Flux de Données
+### Flux de Données
 
 ```mermaid
 graph TD
@@ -406,86 +406,86 @@ graph TD
     H --> I[Notification Client]
 ```
 
-### 🧩 Modules Principaux
+### Modules Principaux
 
-#### 🔐 Crypto
+#### Crypto
 - **EncryptionManager** : Chiffrement AES-GCM et RSA
 - **AuthManager** : Authentification et signatures
 - **KeyManager** : Génération et gestion des clés
 
-#### 🗄️ Storage
+#### Storage
 - **EncryptedDatabase** : Base de données SQLite chiffrée
 - **MessageManager** : Gestion des messages et cache
 
-#### 🎨 UI
+#### UI
 - **ASCIIArt** : Animations et logo
 - **MenuManager** : Interface utilisateur responsive
 
 ---
 
-## 🔐 Sécurité
+## Sécurité
 
-### 🛡️ Protocoles de Chiffrement
+### Protocoles de Chiffrement
 
-#### 🔒 Chiffrement des Messages
+#### Chiffrement des Messages
 - **Algorithme** : AES-256-GCM
 - **Mode** : Galois/Counter Mode (authentification intégrée)
 - **Clé** : 256 bits générée aléatoirement
 - **Nonce** : 96 bits unique par message
 
-#### 🔑 Échange de Clés
+#### Échange de Clés
 - **Algorithme** : RSA-4096
 - **Taille** : 4096 bits
 - **Usage** : Chiffrement des clés de session AES
 - **Rotation** : Clés régénérées périodiquement
 
-#### 🔐 Authentification
+#### Authentification
 - **Hachage** : Argon2id
 - **Sel** : 32 bytes aléatoire
 - **Itérations** : 100,000
 - **Mémoire** : 64 MB
 
-### 🔒 Sécurité des Données
+### Sécurité des Données
 
-#### 🗄️ Base de Données
+#### Base de Données
 - **Chiffrement** : AES-256 en mode CBC
 - **Clé** : Dérivée du mot de passe maître
 - **Intégrité** : HMAC-SHA256
 - **Sauvegarde** : Chiffrée automatiquement
 
-#### 🌐 Communication Réseau
+#### Communication Réseau
 - **Protocole** : TCP sécurisé
 - **Authentification** : Certificats RSA
 - **Protection** : Anti-replay avec timestamps
 - **Validation** : Signatures numériques
 
-### 🛡️ Bonnes Pratiques
+### Bonnes Pratiques
 
-- ✅ **Validation des entrées** utilisateur
-- ✅ **Protection contre les injections** SQL
-- ✅ **Gestion sécurisée** des mots de passe
-- ✅ **Nettoyage automatique** des données sensibles
-- ✅ **Logs sécurisés** sans informations sensibles
+- **Validation des entrées** utilisateur
+- **Protection contre les injections** SQL
+- **Gestion sécurisée** des mots de passe
+- **Nettoyage automatique** des données sensibles
+- **Logs sécurisés** sans informations sensibles
 
 ---
 
-## 📊 Performances
+## Performances
 
-### ⚡ Optimisations Implémentées
+### Optimisations Implémentées
 
-#### 🚀 Démarrage Rapide
+#### Démarrage Rapide
 - **Lazy Loading** : Modules chargés à la demande
 - **Cache intelligent** : Mise en cache des validations
 - **Pool de connexions** : Réutilisation des connexions DB
 - **Requêtes préparées** : Optimisation des requêtes SQL
 
-#### 🧠 Gestion Mémoire
+#### Gestion Mémoire
 - **Cache limité** : Taille maximale configurable
 - **Nettoyage automatique** : Libération mémoire
 - **Compression** : Messages compressés avec gzip
 - **Pool de ressources** : Réutilisation des objets
 
-#### 📈 Métriques de Performance
+#### Métriques de Performance
 
 | Métrique | Avant | Après | Amélioration |
 |----------|-------|-------|--------------|
@@ -494,7 +494,7 @@ graph TD
 | **Requêtes DB** | 150ms | 60ms | **60% plus rapide** |
 | **Validation** | 5ms | 1ms | **80% plus rapide** |
 
-### 🔧 Configuration des Performances
+### Configuration des Performances
 
 ```python
 # config/settings.py
@@ -509,9 +509,9 @@ PERFORMANCE_CONFIG = {
 
 ---
 
-## 🛠️ Configuration
+## Configuration
 
-### ⚙️ Fichier de Configuration
+### Fichier de Configuration
 
 ```python
 # config/settings.py
@@ -531,7 +531,7 @@ AES_KEY_SIZE = 32
 RSA_KEY_SIZE = 4096
 ```
 
-### 🎨 Personnalisation de l'Interface
+### Personnalisation de l'Interface
 
 #### Couleurs Terminal
 ```python
@@ -559,9 +559,9 @@ RESPONSIVE_CONFIG = {
 
 ---
 
-## 🧪 Tests
+## Tests
 
-### 🚀 Exécution des Tests
+### Exécution des Tests
 
 ```bash
 # Tests unitaires
@@ -574,27 +574,27 @@ python -m pytest --cov=src tests/
 python -m pytest tests/test_crypto.py -v
 ```
 
-### 📊 Types de Tests
+### Types de Tests
 
-#### 🔐 Tests de Sécurité
+#### Tests de Sécurité
 - **Chiffrement/Déchiffrement** : Vérification des algorithmes
 - **Authentification** : Validation des tokens
 - **Validation** : Tests des entrées utilisateur
 - **Gestion des clés** : Rotation et stockage
 
-#### 🗄️ Tests de Base de Données
+#### Tests de Base de Données
 - **Opérations CRUD** : Création, lecture, mise à jour, suppression
 - **Intégrité** : Vérification des contraintes
 - **Performance** : Tests de charge
 - **Sauvegarde** : Récupération des données
 
-#### 🌐 Tests Réseau
+#### Tests Réseau
 - **Connexions** : Tests de connectivité
 - **Messages** : Envoi/réception
 - **Concurrence** : Clients multiples
 - **Résilience** : Gestion des erreurs
 
-### 📈 Couverture de Code
+### Couverture de Code
 
 ```
 Name                     Stmts   Miss  Cover   Missing
@@ -613,11 +613,11 @@ TOTAL                      538     22    96%
 
 ---
 
-## 📚 Documentation
+## Documentation
 
-### 📖 Documentation Technique
+### Documentation Technique
 
-#### 🔐 API de Chiffrement
+#### API de Chiffrement
 ```python
 from src.crypto.encryption import EncryptionManager
 
@@ -631,7 +631,7 @@ encrypted_data = encryption.encrypt_with_aes(data, key, nonce)
 encrypted_key = encryption.encrypt_with_rsa(key, public_key)
 ```
 
-#### 🗄️ API de Base de Données
+#### API de Base de Données
 ```python
 from src.storage.database import EncryptedDatabase
 
@@ -645,7 +645,7 @@ success = db.save_message(sender, recipient, message, hash)
 messages = db.get_user_messages(username, limit=50)
 ```
 
-#### 🎨 API d'Interface
+#### API d'Interface
 ```python
 from src.ui.menu import MenuManager
 
@@ -659,9 +659,9 @@ choice = menu.show_main_menu()
 width = menu.get_responsive_width()
 ```
 
-### 🔧 Exemples d'Utilisation
+### Exemples d'Utilisation
 
-#### 📤 Envoi de Message Sécurisé
+#### Envoi de Message Sécurisé
 ```python
 # Client
 client = MessagerCryptClient()
@@ -672,7 +672,7 @@ client.login("username", "password")
 success = client.send_message("recipient", "Hello World!")
 ```
 
-#### 🖥️ Serveur Multi-Client
+#### Serveur Multi-Client
 ```python
 # Serveur
 server = MessagerCryptServer("localhost", 8888)
@@ -685,9 +685,9 @@ while server.running:
 
 ---
 
-## 🤝 Contribution
+## Contribution
 
-### 🚀 Comment Contribuer
+### Comment Contribuer
 
 1. **Fork** le repository
 2. **Créer une branche** pour votre fonctionnalité
@@ -695,27 +695,27 @@ while server.running:
 4. **Pousser** vers la branche
 5. **Ouvrir une Pull Request**
 
-### 📋 Guidelines
+### Guidelines
 
-#### 🎯 Standards de Code
+#### Standards de Code
 - **PEP 8** : Respect des conventions Python
 - **Docstrings** : Documentation des fonctions
 - **Type Hints** : Annotations de types
 - **Tests** : Couverture de code > 90%
 
-#### 🔒 Sécurité
+#### Sécurité
 - **Validation** : Toutes les entrées utilisateur
 - **Chiffrement** : Données sensibles uniquement
 - **Logs** : Aucune information sensible
 - **Tests** : Validation des protocoles de sécurité
 
-#### 🎨 Interface
+#### Interface
 - **Responsive** : Adaptation à tous les terminaux
 - **Accessibilité** : Support des lecteurs d'écran
 - **Couleurs** : Thème cohérent
 - **Animations** : Fluides et non intrusives
 
-### 🐛 Signaler un Bug
+### Signaler un Bug
 
 Utilisez le template d'issue avec :
 - **Description** détaillée du problème
@@ -723,7 +723,7 @@ Utilisez le template d'issue avec :
 - **Environnement** (OS, Python, etc.)
 - **Logs** d'erreur si disponibles
 
-### 💡 Proposer une Fonctionnalité
+### Proposer une Fonctionnalité
 
 Utilisez le template de feature request avec :
 - **Description** de la fonctionnalité
@@ -733,16 +733,16 @@ Utilisez le template de feature request avec :
 
 ---
 
-## 📄 Licence
+## Licence
 
 Ce projet est sous licence **MIT**. Voir le fichier [LICENSE](LICENSE) pour plus de détails.
 
-### 📋 Résumé de la Licence
+### Résumé de la Licence
 
 ```
 MIT License
 
-Copyright (c) 2024 [𝕹𝖎𝖓_𝕾𝖍𝖎𝖓𝖔𝖇𝖎🥷🏾]
+Copyright (c) 2024 [𝕹𝖎𝖓_𝕾𝖍𝖎𝖓𝖔𝖇𝖎]
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -761,16 +761,16 @@ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
 
 ---
 
-## 🏆 Reconnaissance
+## Reconnaissance
 
-### 🙏 Remerciements
+### Remerciements
 
 - **Cryptography.io** pour les primitives de chiffrement
 - **Rich** pour l'interface terminal moderne
 - **SQLite** pour la base de données légère
 - **Python** pour l'écosystème robuste
 
-### 🌟 Inspirations
+### Inspirations
 
 - **Signal** pour les protocoles de sécurité
 - **Telegram** pour l'interface utilisateur
@@ -781,12 +781,12 @@ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
 
 <div align="center">
 
-**🥷🏾 Développé avec ❤️ par [𝕹𝖎𝖓_𝕾𝖍𝖎𝖓𝖔𝖇𝖎🥷🏾]**
+**Développé avec  par [𝕹𝖎𝖓_𝕾𝖍𝖎𝖓𝖔𝖇𝖎]**
 
 [![GitHub](https://img.shields.io/badge/GitHub-@Nin--Shinobi-black?style=for-the-badge&logo=github)](https://github.com/Nin-Shinobi)
 [![Python](https://img.shields.io/badge/Python-3.8+-blue?style=for-the-badge&logo=python)](https://python.org)
 [![Security](https://img.shields.io/badge/Security-First-red?style=for-the-badge&logo=shield)](https://cryptography.io)
 
-**🔐 MessagerCrypt - Votre vie privée, notre priorité**
+**MessagerCrypt - Votre vie privée, notre priorité**
 
 </div>
